@@ -1,7 +1,7 @@
 import io
 import subprocess
 import sys
-from bottle import route, run, request, auth_basic, HTTPResponse
+from bottle import Bottle, route, run, request, auth_basic, HTTPResponse
 import PIL.Image
 import PIL.ImageDraw
 import PIL.ImageFont
@@ -12,6 +12,8 @@ from wand.color import Color
 from wand.drawing import Drawing
 from wand.image import Image, IMAGE_TYPES
 from text_print import TextCanvas
+
+app = Bottle("moskito-renderer")
 
 def reverse_bits(i: int):
     'Reverse the bits of this byte (as `int`)'
@@ -96,7 +98,7 @@ def word_wrap(image, ctx, text, roi_width, roi_height):
 def is_authenticated_user(user, password):
     return user == 'moskito' and password == 'dafddd2e-c02e-4a0a-8157-b9fea1611549'
 
-@route('/api/text2bitmap', method='POST')
+@app.route('/api/text2bitmap', method='POST')
 @auth_basic(is_authenticated_user)
 def index():
     text = request.forms.get('text')
@@ -134,5 +136,3 @@ def index():
             if (pixels == -1):
                 return HTTPResponse(status=500)
             return {'pixels': list(pixels)}
-
-run(host='0.0.0.0', port=8080)
