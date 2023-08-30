@@ -101,38 +101,49 @@ def is_authenticated_user(user, password):
 @app.route('/api/text2bitmap', method='POST')
 @auth_basic(is_authenticated_user)
 def index():
+    from_number = request.forms.get('from')
     text = request.forms.get('text')
+    date = request.forms.get('date')
+
     if (text is None):
         return HTTPResponse(status=400)
     
     ROI_SIDE = 384
+    ROI_HEIGHT = 2000
+    side = 384 - 10 if from_number == "vous" else 0
 
-    with Image(pseudo="canvas:white", width=384, height=384) as img:
+    with Image(pseudo="canvas:white", width=ROI_SIDE+20, height=ROI_HEIGHT) as tmp:
         with Drawing() as ctx:
             # Set the font style
             ctx.fill_color = Color('BLACK')
-            ctx.text_alignment = 'center'
+            ctx.text_alignment = 'left'
             ctx.font_family = 'Arial'
-            ctx.font_size = 40
-            mutable_message = word_wrap(img,
-                                        ctx,
-                                        text,
-                                        ROI_SIDE,
-                                        ROI_SIDE)
-            metrics = ctx.get_font_metrics(img, mutable_message, True)
-            ctx.text(int((384 - metrics.text_width / 2)), int((384 - metrics.text_height) / 2), mutable_message)
-            ctx.draw(img)
-            img.black_threshold(Color("#808080"))
-            img.format = 'pbm'
-            pbm = io.BytesIO()
-            img.save(pbm)
-            img.convert('png')
-            img.save(filename='../test.png')
-            pbm.seek(0)
-            printer_data = PrinterData(384, pbm)
+            ctx.font_size = 20
+            message = word_wrap(tmp,ctx,text,ROI_SIDE-20,ROI_HEIGHT)
+            separator = "---"
+            from_date = "de " + from_number + ", le " + date
+            message_metrics = ctx.get_font_metrics(tmp, message, True)
+            ctx.font_size = 12
+            separator_metrics = ctx.get_font_metrics(tmp, separator, True)
+            from_date_metrics = ctx.get_font_metrics(tmp, from_date, True)
+            with Image(pseudo="canvas:white", width=ROI_SIDE, height=int(message_metrics.text_height + separator_metrics.text_height + from_date_metrics.text_height + 10)) as img:
+                ctx.font_size = 20
+                ctx.text(int((side - message_metrics.text_width if side != 0 else 10)), int(25), message)
+                ctx.font_size = 12
+                ctx.text(int((side - separator_metrics.text_width if side != 0 else 10)), int((message_metrics.text_height + separator_metrics.text_height)), separator)
+                ctx.text(int((side - from_date_metrics.text_width if side != 0 else 10)), int((message_metrics.text_height + separator_metrics.text_height + from_date_metrics.text_height)), from_date)
+                ctx.draw(img)
+                img.black_threshold(Color("#808080"))
+                img.format = 'pbm'
+                pbm = io.BytesIO()
+                img.save(pbm)
+                img.convert('png')
+                img.save(filename='../test.png')
+                pbm.seek(0)
+                printer_data = PrinterData(384, pbm)
 
-            pixels = print_bitmap(printer_data)
+                pixels = print_bitmap(printer_data)
 
-            if (pixels == -1):
-                return HTTPResponse(status=500)
-            return {'pixels': list(pixels)}
+                if (pixels == -1):
+                    return HTTPResponse(status=500)
+                return {'pixels': list(pixels)}
