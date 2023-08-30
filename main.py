@@ -118,12 +118,12 @@ def index():
             ctx.fill_color = Color('BLACK')
             ctx.text_alignment = 'left'
             ctx.font_family = 'Arial'
-            ctx.font_size = 20
+            ctx.font_size = 32
             message = word_wrap(tmp,ctx,text,ROI_SIDE-20,ROI_HEIGHT)
             separator = "---"
             from_date = "de " + from_number + ", le " + date
             message_metrics = ctx.get_font_metrics(tmp, message, True)
-            ctx.font_size = 12
+            ctx.font_size = 24
             separator_metrics = ctx.get_font_metrics(tmp, separator, True)
             from_date_metrics = ctx.get_font_metrics(tmp, from_date, True)
             with Image(pseudo="canvas:white", width=ROI_SIDE, height=int(message_metrics.text_height + separator_metrics.text_height + from_date_metrics.text_height + 10)) as img:
