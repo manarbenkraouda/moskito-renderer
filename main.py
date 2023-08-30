@@ -118,7 +118,7 @@ def index():
             ctx.fill_color = Color('BLACK')
             ctx.text_alignment = 'left'
             ctx.font_family = 'Arial'
-            ctx.font_size = 32
+            ctx.font_size = 40
             message = word_wrap(tmp,ctx,text,ROI_SIDE-20,ROI_HEIGHT)
             separator = "---"
             from_date = "de " + from_number + ", le " + date
@@ -127,9 +127,9 @@ def index():
             separator_metrics = ctx.get_font_metrics(tmp, separator, True)
             from_date_metrics = ctx.get_font_metrics(tmp, from_date, True)
             with Image(pseudo="canvas:white", width=ROI_SIDE, height=int(message_metrics.text_height + separator_metrics.text_height + from_date_metrics.text_height + 10)) as img:
-                ctx.font_size = 20
-                ctx.text(int((side - message_metrics.text_width if side != 0 else 10)), int(25), message)
-                ctx.font_size = 12
+                ctx.font_size = 40
+                ctx.text(int((side - message_metrics.text_width if side != 0 else 10)), int(30), message)
+                ctx.font_size = 24
                 ctx.text(int((side - separator_metrics.text_width if side != 0 else 10)), int((message_metrics.text_height + separator_metrics.text_height)), separator)
                 ctx.text(int((side - from_date_metrics.text_width if side != 0 else 10)), int((message_metrics.text_height + separator_metrics.text_height + from_date_metrics.text_height)), from_date)
                 ctx.draw(img)
@@ -147,3 +147,5 @@ def index():
                 if (pixels == -1):
                     return HTTPResponse(status=500)
                 return {'pixels': list(pixels)}
+
+app.run(host='0.0.0.0', port=8080, debug=True)
