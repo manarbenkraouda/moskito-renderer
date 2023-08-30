@@ -147,5 +147,3 @@ def index():
                 if (pixels == -1):
                     return HTTPResponse(status=500)
                 return {'pixels': list(pixels)}
-
-app.run(host='0.0.0.0', port=8080, debug=True)
