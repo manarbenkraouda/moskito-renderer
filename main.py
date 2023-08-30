@@ -121,7 +121,8 @@ def index():
             ctx.font_size = 40
             message = word_wrap(tmp,ctx,text,ROI_SIDE-20,ROI_HEIGHT)
             separator = "---"
-            from_date = "de " + from_number + ", le " + date
+            from_date = word_wrap(tmp,ctx,"de " + from_number + ", le " + date,ROI_SIDE-20,ROI_HEIGHT)
+            
             message_metrics = ctx.get_font_metrics(tmp, message, True)
             ctx.font_size = 24
             separator_metrics = ctx.get_font_metrics(tmp, separator, True)
