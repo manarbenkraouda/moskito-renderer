@@ -109,7 +109,7 @@ def index():
         return HTTPResponse(status=400)
     
     ROI_SIDE = 384
-    ROI_HEIGHT = 2000
+    ROI_HEIGHT = 3000
     side = 384 - 10 if from_number == "vous" else 0
 
     with Image(pseudo="canvas:white", width=ROI_SIDE+20, height=ROI_HEIGHT) as tmp:
@@ -121,16 +121,15 @@ def index():
             ctx.font_size = 40
             message = word_wrap(tmp,ctx,text,ROI_SIDE-20,ROI_HEIGHT)
             separator = "---"
-            from_date = word_wrap(tmp,ctx,"de " + from_number + ", le " + date,ROI_SIDE-20,ROI_HEIGHT)
-            
             message_metrics = ctx.get_font_metrics(tmp, message, True)
-            ctx.font_size = 24
+            ctx.font_size = 20
+            from_date = word_wrap(tmp,ctx, "de " + from_number + ", le " + date,ROI_SIDE-20,ROI_HEIGHT)
             separator_metrics = ctx.get_font_metrics(tmp, separator, True)
             from_date_metrics = ctx.get_font_metrics(tmp, from_date, True)
             with Image(pseudo="canvas:white", width=ROI_SIDE, height=int(message_metrics.text_height + separator_metrics.text_height + from_date_metrics.text_height + 10)) as img:
                 ctx.font_size = 40
                 ctx.text(int((side - message_metrics.text_width if side != 0 else 10)), int(30), message)
-                ctx.font_size = 24
+                ctx.font_size = 20
                 ctx.text(int((side - separator_metrics.text_width if side != 0 else 10)), int((message_metrics.text_height + separator_metrics.text_height)), separator)
                 ctx.text(int((side - from_date_metrics.text_width if side != 0 else 10)), int((message_metrics.text_height + separator_metrics.text_height + from_date_metrics.text_height)), from_date)
                 ctx.draw(img)
