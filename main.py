@@ -126,12 +126,12 @@ def index():
             from_date = word_wrap(tmp,ctx, "de " + from_number + ", le " + date,ROI_SIDE-20,ROI_HEIGHT)
             separator_metrics = ctx.get_font_metrics(tmp, separator, True)
             from_date_metrics = ctx.get_font_metrics(tmp, from_date, True)
-            with Image(pseudo="canvas:white", width=ROI_SIDE, height=int(message_metrics.text_height + separator_metrics.text_height + from_date_metrics.text_height + 10)) as img:
+            with Image(pseudo="canvas:white", width=ROI_SIDE, height=int(message_metrics.text_height + separator_metrics.text_height + from_date_metrics.text_height + 100)) as img:
                 ctx.font_size = 40
-                ctx.text(int((side - message_metrics.text_width if side != 0 else 10)), int(30), message)
+                ctx.text(int((side - message_metrics.text_width if side != 0 else 10)), int(130), message)
                 ctx.font_size = 20
-                ctx.text(int((side - separator_metrics.text_width if side != 0 else 10)), int((message_metrics.text_height + separator_metrics.text_height)), separator)
-                ctx.text(int((side - from_date_metrics.text_width if side != 0 else 10)), int((message_metrics.text_height + separator_metrics.text_height + from_date_metrics.text_height)), from_date)
+                ctx.text(int((side - separator_metrics.text_width if side != 0 else 10)), int((message_metrics.text_height + separator_metrics.text_height)+90), separator)
+                ctx.text(int((side - from_date_metrics.text_width if side != 0 else 10)), int((message_metrics.text_height + separator_metrics.text_height + from_date_metrics.text_height)+90), from_date)
                 ctx.draw(img)
                 img.black_threshold(Color("#808080"))
                 img.format = 'pbm'
